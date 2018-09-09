@@ -1,33 +1,35 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
+import * as BooksAPI from './BooksAPI'
+import Book_render from './Book_render'
+/*import escapeRegExp from 'escape-string-regexp'
+import sortBy from 'sort-by'*/
 
 class Search extends Component{
 
-   state = {
-    query: ''
+  state={
+    query: '',
+    search_books: [],
+    error: false
   }
 
-  updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-  }
+  searchBooks = (newQuery) => {
+    this.setState({query: newQuery});
 
-  clearQuery = () => {
-    this.setState({ query: '' })
+    if(newQuery){
+      this.setState({error: false});
+      BooksAPI.search(newQuery).then((books) => {
+        books.length > 0 ? this.setState({search_books: books}) : this.setState({error: true, search_books: []})
+      })
+    } else {
+      this.setState({search_books: [], error: true});
+    }
   }
 
 	render(){
+    const {error, query, search_books} = this.state
 
-    let showingBooks
-    if (this.state.query) {
-      const match = new RegExp(escapeRegExp(this.state.query), 'i')
-      showingBooks = this.props.search_books.filter((author) => match.test(author.title))
-    } else {
-      showingBooks = []
-    }
 
-    showingBooks.sort(sortBy('title'))
 		return(
 			<div className="search-books">
             <div className="search-books-bar">
@@ -44,7 +46,9 @@ class Search extends Component{
                 <input
                 type="text"
                 placeholder="Search by title or author"
-                onChange={(event) => this.updateQuery(event.target.value)}/>
+                value={query}
+                onChange={(event) => this.searchBooks(event.target.value) }
+                />
 
               </div>
             </div>
@@ -52,26 +56,10 @@ class Search extends Component{
 
             <div className="search-books-results">
               <ol className="books-grid">
-                {showingBooks.map((book) => (
-                    <li key={book.id}>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select>
-                                <option value="move" disabled>Move to...</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="wantToRead">Want to Read</option>
-                                <option value="read">Read</option>
-                                <option value="none">None</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.authors[0]}</div>
-                        </div>
-                    </li>
-                ))}
+                {!(error) ? (search_books.map((book) => (
+                  <Book_render book={book}/>
+                ))) : query ? <div>Sorry "{query}" book is not available</div> : <div></div>
+                }
               </ol>
             </div>
 
