@@ -23,9 +23,11 @@ class MyReads extends Component{
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {books.filter((book) => book.shelf === "currentlyReading").map(book => (
-                        <BookRender book={book} updateShelf={updateShelf}/>
-                        ))}
+                        {books.filter((book) => book.shelf === "currentlyReading").map(book => (
+                          <li key={book.id}>
+                            <BookRender book={book} updateShelf={updateShelf}/>
+                          </li>
+                          ))}
                     </ol>
                   </div>
                 </div>
@@ -35,9 +37,11 @@ class MyReads extends Component{
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {books.filter((book) => book.shelf === "wantToRead").map(book => (
-                        <BookRender book={book} updateShelf={updateShelf}/>
-                        ))}
+                        {books.filter((book) => book.shelf === "wantToRead").map(book => (
+                          <li key={book.id}>
+                            <BookRender book={book} updateShelf={updateShelf}/>
+                          </li>
+                          ))}
                     </ol>
                   </div>
                 </div>
@@ -47,9 +51,11 @@ class MyReads extends Component{
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
-                      {books.filter((book) => book.shelf === "read").map(book => (
-                        <BookRender book={book} updateShelf={updateShelf}/>
-                        ))}
+                        {books.filter((book) => book.shelf === "read").map(book => (
+                          <li key={book.id}>
+                            <BookRender book={book} updateShelf={updateShelf}/>
+                          </li>
+                          ))}
                     </ol>
                   </div>
                 </div>

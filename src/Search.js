@@ -2,14 +2,12 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import BookRender from './BookRender'
-/*import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'*/
 
 class Search extends Component{
   state={
     query: '',
     search_books: [],
-    error: false
+    error: false,
   }
 
   searchBooks = (newQuery) => {
@@ -19,10 +17,22 @@ class Search extends Component{
       this.setState({error: false});
       BooksAPI.search(newQuery).then((books) => {
         books.length > 0 ? this.setState({search_books: books}) : this.setState({error: true, search_books: []})
+        this.update(this.state.search_books)
       })
     } else {
       this.setState({search_books: [], error: true});
     }
+  }
+
+  update = (books) => {
+    for(let a of books){
+      for(let b of this.props.currentBooks){
+        if( a.id === b.id ){
+          a.shelf=b.shelf
+        }
+      }
+    }
+    this.setState({search_books: books})
   }
 
 	render(){
@@ -55,10 +65,12 @@ class Search extends Component{
 
             <div className="search-books-results">
               <ol className="books-grid">
-                {!(error) ? (search_books.map((book) => (
-                  <BookRender book={book} updateShelf={updateShelf}/>
-                ))) : query ? <div>Sorry "{query}" book is not available</div> : <div></div>
-                }
+                  {!(error) ? (search_books.map((book) => (
+                    <li key={book.id}>
+                      <BookRender book={book} updateShelf={updateShelf}/>
+                    </li>
+                    ))) : query ? <div>Sorry "{query}" book is not available</div> : <div></div>
+                  }
               </ol>
             </div>
 
