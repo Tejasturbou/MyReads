@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 import placeHolder from './icons/placeholder-image.jpg'
 
 
-class Book_render extends Component{
+class BookRender extends Component{
+	update = (book, value) => {
+		book.shelf = value
+	}
 
 	render(){
-		const {book} = this.props
+		const {book, updateShelf} = this.props
 
 		return(
 			<li key={book.id}>
@@ -13,7 +16,8 @@ class Book_render extends Component{
 			      <div className="book-top">
 			        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks && book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail :  placeHolder})` }}></div>
 			        <div className="book-shelf-changer">
-			          <select>
+			          <select value={book.shelf || 'move'}
+			          	onChange={(evt) => {updateShelf(book, evt.target.value); this.update(book, evt.target.value)}}>
 			            <option value="move" disabled>Move to...</option>
 			            <option value="currentlyReading">Currently Reading</option>
 			            <option value="wantToRead">Want to Read</option>
@@ -31,4 +35,4 @@ class Book_render extends Component{
 }
 
 
-export default Book_render
+export default BookRender

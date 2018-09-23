@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
-import Book_render from './Book_render'
+import BookRender from './BookRender'
 /*import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'*/
 
 class Search extends Component{
-
   state={
     query: '',
     search_books: [],
@@ -28,7 +27,7 @@ class Search extends Component{
 
 	render(){
     const {error, query, search_books} = this.state
-
+    const {updateShelf} = this.props
 
 		return(
 			<div className="search-books">
@@ -47,7 +46,7 @@ class Search extends Component{
                 type="text"
                 placeholder="Search by title or author"
                 value={query}
-                onChange={(event) => this.searchBooks(event.target.value) }
+                onChange={(event) => this.searchBooks(event.target.value)}
                 />
 
               </div>
@@ -57,7 +56,7 @@ class Search extends Component{
             <div className="search-books-results">
               <ol className="books-grid">
                 {!(error) ? (search_books.map((book) => (
-                  <Book_render book={book}/>
+                  <BookRender book={book} updateShelf={updateShelf}/>
                 ))) : query ? <div>Sorry "{query}" book is not available</div> : <div></div>
                 }
               </ol>
